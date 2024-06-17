@@ -75,7 +75,9 @@ public:
         _pos = POS(69, 96);
     }
 
-    void test() {
+    friend bool compare(const MyClass& objA, const MyClass& objB);
+
+    void print() {
         std::cout << "Bool: " << _bool << "\n";
         std::cout << "Char: " << _char << "\n";
         std::cout << "Double: " << _double << "\n";
@@ -160,6 +162,29 @@ private:
     }
 };
 
+bool compare(const MyClass& a, const MyClass& b) {
+    if (a._bool != b._bool) return false;
+    if (a._char != b._char) return false;
+    if (a._int_protected != b._int_protected) return false;
+    if (a._double != b._double) return false;
+    if (a._float != b._float) return false;
+    if (a._long != b._long) return false;
+    if (a._long_long != b._long_long) return false;
+    if (a._short != b._short) return false;
+    if (a._string != b._string) return false;
+    if (*a._ptr_int != *b._ptr_int) return false;
+    if (*a._ptr_string != *b._ptr_string) return false;
+    if (a._q_int != b._q_int) return false;
+    if (a._q_string != b._q_string) return false;
+    if (*a._s_ptr_int != *b._s_ptr_int) return false;
+    if (*a._s_ptr_string != *b._s_ptr_string) return false;
+    if (a._stack_int != b._stack_int) return false;
+    if (a._stack_string != b._stack_string) return false;
+    if (a._v_int != b._v_int) return false;
+    if (a._v_string != b._v_string) return false;
+    return true;
+}
+
 int main() {
     MyClass original(false);
     serialization::serialize(original, "data.xml");
@@ -167,7 +192,10 @@ int main() {
     MyClass loaded;
     serialization::deserialize(loaded, "data.xml");
 
-    loaded.test();
+    loaded.print();
+
+    if (compare(original, loaded)) std::cout << "\nClass fields are the same!\n";
+    else std::cout << "\nClass fields are NOT the same :(\n";
 
     return 0;
 }
