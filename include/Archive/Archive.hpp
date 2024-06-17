@@ -12,25 +12,14 @@
 #include <string>
 #include <vector>
 
-#include <tinyxml2.h>
+#include "tinyxml2/tinyxml2.h"
 
 #include "Archive/TypeName.hpp"
 
 class Archive {
 public:
-    explicit Archive(std::ostream& os, const std::string& class_name): _os(&os) {
-        *_os << R"(<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>)" << '\n';
-
-        setParent(class_name);
-        _class_name = class_name;
-    }
-    explicit Archive(const std::string& file_path, const std::string& class_name): _os(nullptr) {
-        std::cout << "DESERIALIZING!\n";
-        _doc.LoadFile(file_path.c_str());
-
-        setParent(class_name);
-        _class_name = class_name;
-    }
+    explicit Archive(std::ostream& os, const std::string& class_name);
+    explicit Archive(const std::string& file_path, const std::string& class_name);
 
     template<typename T>
     void connect(T*& other, const std::string& name) {
@@ -68,9 +57,6 @@ public:
 
     template<typename T>
     void connect(T& other, const std::string& name) {
-        //std::string str(TypeUtils::Type::name(other));
-        //str = std::regex_replace(str, std::regex("std::__cxx11::basic_string<char>"), "std::string");
-
         if constexpr (std::is_arithmetic_v<T>) {
             serialize_basic(other, name);
         } else {
