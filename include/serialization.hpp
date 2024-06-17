@@ -13,6 +13,7 @@ namespace serialization {
     void serialize(T& object, const std::string& file_path) {
         std::ofstream ofs(file_path);
         if (!ofs) throw std::runtime_error("Deserialization failed: could not open file for writing");
+
         Archive ar(ofs, std::string(TypeUtils::Type::name(object)));
         object.serializeBases(ar, 1);
         object.serialize(ar, 1);
@@ -20,6 +21,10 @@ namespace serialization {
 
     template <typename T>
     void deserialize(T& object, const std::string& file_path) {
+        auto* ifs = new std::ifstream(file_path);
+        if (!*ifs) throw std::runtime_error("Deserialization failed: could not open file for reading");
+        delete ifs;
+
         Archive ar(file_path, std::string(TypeUtils::Type::name(object)));
         object.serializeBases(ar, 1);
         object.serialize(ar, 1);

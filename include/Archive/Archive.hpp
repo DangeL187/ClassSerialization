@@ -33,12 +33,7 @@ public:
 
     template<typename T>
     void connect(std::shared_ptr<T>& other, const std::string& name) {
-        serialize_smart_pointer(other, name);
-    }
-
-    template<typename T>
-    void connect(std::unique_ptr<T>& other, const std::string& name) {
-        serialize_smart_pointer(other, name);
+        serialize_shared_pointer(other, name);
     }
 
     template<typename T>
@@ -72,8 +67,6 @@ public:
         if (is_parent && parent_name != _class_name) {
             _tags.push(parent_name);
 
-            std::cout << "<" << _tags.top() << ">\n";
-
             if (_os) {
                 *_os << std::string((_tags.size() - 1) * 4, ' ') << "<" << _tags.top() << ">\n";
                 return;
@@ -85,8 +78,6 @@ public:
                 _nodes.push(_nodes.top()->FirstChildElement(_tags.top().c_str()));
             }
         } else if (!is_parent) {
-            std::cout << "</" << _tags.top() << ">\n";
-
             if (_os) {
                 *_os << std::string((_tags.size() - 1) * 4, ' ') << "</" << _tags.top() << ">\n";
             }
@@ -129,6 +120,7 @@ private:
             if (std::stoi(_nodes.top()->FirstChildElement("is_null")->GetText())) {
                 ptr = nullptr;
             } else {
+                if (!ptr) ptr = new T();
                 connect(*ptr, "value");
             }
         }
@@ -156,14 +148,15 @@ private:
     }
 
     template<typename T>
-    void serialize_smart_pointer(T& smart_ptr, const std::string& name) {
-        auto* ptr = smart_ptr.get();
+    void serialize_shared_pointer(std::shared_ptr<T>& shared_ptr, const std::string& name) {
+        if (!shared_ptr) shared_ptr = std::make_shared<T>();
+        auto* ptr = shared_ptr.get();
         serialize_pointer(ptr, name);
-        if (!ptr) smart_ptr = nullptr;
+        if (!ptr) shared_ptr = nullptr;
     }
 
     template<typename T>
-    void serialize_stack(std::unique_ptr<T>& stack, const std::string& name) {
+    void serialize_stack(std::stack<T>& stack, const std::string& name) {
         if (_os) {
             std::vector<T> vector;
             std::stack<T> stack_copy = stack;
@@ -171,7 +164,6 @@ private:
                 vector.push_back(stack_copy.top());
                 stack_copy.pop();
             }
-            std::reverse(vector.begin(), vector.end());
             connect(vector, name);
             return;
         }
