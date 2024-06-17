@@ -1,5 +1,4 @@
 #include <iostream>
-#include <fstream>
 
 #include "serialization.hpp"
 
@@ -12,42 +11,73 @@ struct POS {
     POS(int x, int y): x(x), y(y) {}
 };
 
-class MyClass {
+class Parent {
 public:
-    DEFINE_SERIALIZE(_id, _name, _none, _boo, _ch, _test)
+    DEFINE_SERIALIZE(_pos)
 
-    MyClass() = default;
+protected:
+    POS _pos;
+};
 
-    MyClass(float id, const std::string& name) {
-        _id = id;
-        _name = name;
-        _none = POS(69, 187);
-        _boo = true;
-        _ch = 89;
-        _test = {1, 2, 3, 4, 5, 6};
-    }
+class Parent2 {
+public:
+    DEFINE_SERIALIZE(_int)
 
-    void print() {
-        std::cout << "ID: [" << _id << "], Name: [" << _name << "], None: [" << _none.x << " " << _none.y << "]\n";
-        std::cout << _boo << " [" << _ch << "]\n";
-        for (auto& i: _test) std::cout << i << "#";
+protected:
+    int _int = 45;
+
+    void printPrivate() const {
+        std::cout << _private << " - private\n";
     }
 
 private:
-    double _id = 0;
-    std::vector<int> _test;
-    std::string _name;
-    POS _none;
-    bool _boo = false;
-    char _ch = 0;
+    int _private = 45;
+};
+
+class MyClass: public Parent, public Parent2 {
+DEFINE_SERIALIZE(_double, _string, _vector, _char)
+DEFINE_SERIALIZE_BASES(Parent, Parent2)
+public:
+    double _double = 0;
+
+    MyClass() {
+        _string = std::make_shared<std::string>("Default");
+    }
+
+    MyClass(double id, const std::string& name) {
+        _double = id;
+        _string = std::make_shared<std::string>(name);
+        //_string = nullptr;
+        _pos = POS(69, 187);
+        _vector = {1, 2, 3, 4, 5, 6};
+        _char = 89;
+    }
+
+    void print() {
+        std::cout << "double: [" << _double << "], None: [" << _pos.x << " " << _pos.y << "]\n";
+        std::cout << "Shared Ptr String: [";
+        if (_string == nullptr) std::cout << "NULL";
+        else std::cout << *_string;
+        std::cout << "]\n";
+        std::cout << _char << " " << _int << "\n";
+        printPrivate();
+        for (auto& i: _vector) std::cout << i << "#";
+    }
+
+protected:
+    std::vector<int> _vector;
+
+private:
+    std::shared_ptr<std::string> _string;
+    char _char = 0;
 };
 
 int main() {
-    MyClass original(13.123, "Boost Serialization");
-    serialization::serialize(original, "data.txt");
+    MyClass original(13.123, "STRING");
+    serialization::serialize(original, "data.xml");
 
     MyClass loaded;
-    serialization::deserialize(loaded, "data.txt");
+    serialization::deserialize(loaded, "data.xml");
 
     loaded.print();
 
