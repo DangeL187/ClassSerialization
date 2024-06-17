@@ -3,18 +3,62 @@
     <Parent>
         <_pos>
             <x>69</x>
-            <y>187</y>
+            <y>96</y>
         </_pos>
     </Parent>
     <Parent2>
-        <_int>45</_int>
+        <_parent2_int>45</_parent2_int>
     </Parent2>
-    <_double>13.123</_double>
-    <_string>
+    <_int_protected>123</_int_protected>
+    <_bool>1</_bool>
+    <_char>Y</_char>
+    <_double>3.14</_double>
+    <_float>1.87</_float>
+    <_long>1337</_long>
+    <_long_long>13378901</_long_long>
+    <_short>255</_short>
+    <_string>string</_string>
+    <_ptr_int>
         <is_null>0</is_null>
-        <value>STRING</value>
-    </_string>
-    <_vector>
+        <value>13</value>
+    </_ptr_int>
+    <_ptr_string>
+        <is_null>0</is_null>
+        <value>ptr string</value>
+    </_ptr_string>
+    <_q_int>
+        <size>3</size>
+        <item-0>1</item-0>
+        <item-1>2</item-1>
+        <item-2>3</item-2>
+    </_q_int>
+    <_q_string>
+        <size>3</size>
+        <item-0>a</item-0>
+        <item-1>b</item-1>
+        <item-2>c</item-2>
+    </_q_string>
+    <_s_ptr_int>
+        <is_null>0</is_null>
+        <value>14</value>
+    </_s_ptr_int>
+    <_s_ptr_string>
+        <is_null>0</is_null>
+        <value>shared ptr string</value>
+    </_s_ptr_string>
+    <_stack_int>
+        <size>3</size>
+        <item-0>33</item-0>
+        <item-1>22</item-1>
+        <item-2>11</item-2>
+    </_stack_int>
+    <_stack_string>
+        <size>3</size>
+        <item-0>cc</item-0>
+        <item-1>bb</item-1>
+        <item-2>aa</item-2>
+    </_stack_string>
+    <_v_int>
         <size>6</size>
         <item-0>1</item-0>
         <item-1>2</item-1>
@@ -22,6 +66,14 @@
         <item-3>4</item-3>
         <item-4>5</item-4>
         <item-5>6</item-5>
-    </_vector>
-    <_char>Y</_char>
+    </_v_int>
+    <_v_string>
+        <size>6</size>
+        <item-0>a</item-0>
+        <item-1>b</item-1>
+        <item-2>c</item-2>
+        <item-3>d</item-3>
+        <item-4>e</item-4>
+        <item-5>f</item-5>
+    </_v_string>
 </MyClass>
